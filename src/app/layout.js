@@ -10,10 +10,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <NextUIProvider>
+   
       <html lang="en">
-        <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <NextUIProvider>
+          {children}
+        </NextUIProvider>
+      </body>
       </html>
-    </NextUIProvider>
+    
   );
 }
