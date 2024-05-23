@@ -11,7 +11,7 @@ export const mont = Montserrat({
   })
 const Header = () => {
   return (
-      <div className={`flex ${mont.className} uppercase fixed bg-white text-[#2F4137] top-0 w-full items-center justify-between px-6 sm:px-12 md:px-16 lg:px-20 xl:px-28 h-20`}>
+      <div className={`flex ${mont.className} uppercase fixed bg-white z-10 text-[#2F4137] top-0 w-full items-center justify-between px-6 sm:px-12 md:px-16 lg:px-20 xl:px-28 h-20`}>
           <button className='hover:text-[#D39364] uppercase flex items-center'><GiHamburgerMenu/><span className='pl-2'>menu</span></button>
           <h1 className={`${garamond.className} uppercase text-2xl sm:text-3xl lg:text-4xl`} >magnifiqo</h1>
           <h1 className='hidden md:block hover:text-[#D39364]'>make a reservation</h1>
