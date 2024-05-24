@@ -10,7 +10,7 @@ export const mont = Montserrat({
   subsets: ["latin"],
   display: "swap",
 });
-const Footer = () => {
+ const Footer = () => {
   return (
     <div className="flex flex-col space-y-10 w-full items-center justify-center text-xl  text-[#D39364] bg-[#2F4137] py-16">
       <h1 className={`${garamond.className} uppercase text-4xl`}>
