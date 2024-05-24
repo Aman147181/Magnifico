@@ -1,4 +1,5 @@
 import Facilities from "@/components/Facilities";
+import FeaturedVilla from "@/components/FeaturedVilla";
 import HomePageHero from "@/components/HomePageHero";
 import SpaResort from "@/components/SpaResort";
 
@@ -7,7 +8,8 @@ export default function Home() {
     <div className="min-h-screen  w-full">
       <HomePageHero />
       <Facilities />
-      <SpaResort/>
+      <SpaResort />
+      <FeaturedVilla/>
     </div>
   );
 }

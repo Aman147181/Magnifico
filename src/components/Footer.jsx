@@ -1,6 +1,7 @@
 import React from "react";
 import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
 import { Montserrat, EB_Garamond } from "next/font/google";
+import Link from "next/link";
 export const garamond = EB_Garamond({
   subsets: ["latin"],
   display: "swap",
@@ -12,13 +13,19 @@ export const mont = Montserrat({
 const Footer = () => {
   return (
     <div className="flex flex-col space-y-10 w-full items-center justify-center text-xl  text-[#D39364] bg-[#2F4137] py-16">
-      <h1 className={`${garamond.className} uppercase text-4xl`}>Magnifiqo Resort</h1>
+      <h1 className={`${garamond.className} uppercase text-4xl`}>
+        Magnifiqo Resort
+      </h1>
+      <hr className="border block md:hidden w-full border-[#836651]" />
       <div className="grid grid-cols-1 md:grid-cols-3   w-full max-w-7xl gap-y-16 py-16 border-x-0 md:border-x-0 md:border md:border-y-2  border-[#58655C]">
         <div className="flex items-center  justify-start uppercase md:space-y-7 space-y-3 flex-col">
           <h1>Location</h1>
-          <h1 className="text-white ">73 Spring Ave, Latham, NY, USA</h1>
+          <Link href={"https://maps.app.goo.gl/EeNG8NASzrWcRis16"}>
+            <h1 className="text-white px-2 ">73 Spring Ave, Latham, NY, USA</h1>
+          </Link>
         </div>
-        <div className="flex items-center md:border-x-1 border-y-0  md:border-[#58655C]   justify-start  md:space-y-7 space-y-3 flex-col">
+
+        <div className="flex items-center md:border-x-1 md:border-y-0  md:border-[#58655C]   justify-start  md:space-y-7 space-y-3 flex-col">
           <h1 className="uppercase">reservation</h1>
 
           <div className="flex flex-col space-y-1 items-center">
@@ -28,7 +35,7 @@ const Footer = () => {
               </h1>
             </a>
             <a href="mailto: support@magnifiqo.com">
-              <h1 className="text-white hover:text-[#D39364]">
+              <h1 className="text-white px-2 hover:text-[#D39364]">
                 support@magnifiqo.com
               </h1>
             </a>
