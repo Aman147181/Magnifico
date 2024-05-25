@@ -4,6 +4,7 @@ import MobileSidebar from "./MobileNavbar";
 import { EB_Garamond, Montserrat } from "next/font/google";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Select, SelectItem } from "@nextui-org/react";
+import Link from "next/link";
 import {
   Modal,
   ModalContent,
@@ -134,8 +135,9 @@ const Header = () => {
       className={`flex ${mont.className}  fixed bg-white z-10 text-[#2F4137] top-0 w-full items-center justify-between px-6 sm:px-12 md:px-16 lg:px-20 xl:px-28 h-20`}
     >
       <MobileSidebar
-        isOpen={showmobilemenu}
-        onClose={() => setshowmobilemenu(false)}
+        onOpen={onOpen}
+        mobileopen={showmobilemenu}
+        onMobileClose={() => setshowmobilemenu(false)}
       />
       <button
         onClick={() => setshowmobilemenu((el) => !el)}
@@ -144,15 +146,23 @@ const Header = () => {
         <GiHamburgerMenu />
         <span className="pl-2">menu</span>
       </button>
-      <h1
-        className={`${garamond.className} uppercase text-2xl sm:text-3xl lg:text-4xl`}
-      >
-        magnifiqo
-      </h1>
+      <Link href="/">
+        <h1
+          className={`${garamond.className} uppercase text-2xl sm:text-3xl lg:text-4xl`}
+        >
+          magnifiqo
+        </h1>
+      </Link>
       <button onClick={onOpen} className="hidden md:block hover:text-[#D39364]">
         make a reservation
       </button>
-      <Modal size="4xl" radius="sm" isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal
+        placement="center"
+        size="3xl"
+        radius="sm"
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      >
         <ModalContent>
           {(onClose) => (
             <>
