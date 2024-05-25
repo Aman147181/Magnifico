@@ -92,7 +92,7 @@ const page = () => {
         </div>
       </div>
       <div className="flex flex-col pt-20 space-y-2 w-full">
-        <h1 className={`  text-base ${mont.className}`}>FAQ's</h1>
+        <h1 className={`  text-base ${mont.className}`}>FAQs</h1>
         <h1 className={`  text-5xl ${garamond.className}`}>
           Have Any Questions?
         </h1>

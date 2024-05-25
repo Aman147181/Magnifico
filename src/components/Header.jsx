@@ -132,7 +132,7 @@ const Header = () => {
   const [value, setValue] = React.useState(null);
   return (
     <div
-      className={`flex ${mont.className}  fixed bg-white z-10 text-[#2F4137] top-0 w-full items-center justify-between px-6 sm:px-12 md:px-16 lg:px-20 xl:px-28 h-20`}
+      className={`flex ${mont.className}  fixed bg-white z-30 text-[#2F4137] top-0 w-full items-center justify-between px-6 sm:px-12 md:px-16 lg:px-20 xl:px-28 h-20`}
     >
       <MobileSidebar
         onOpen={onOpen}
