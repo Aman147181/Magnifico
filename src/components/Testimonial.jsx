@@ -27,7 +27,7 @@ const Testimonial = () => {
       rating: 4.8,
       feedback:
         "The villa was stunning and the service was impeccable. We enjoyed the beautiful interiors and the breathtaking views. Can't wait to return!",
-      imgURL: "/customer2.jpeg",
+      imgURL: "/customer2.jpg",
     },
     {
       id: 3,
@@ -49,10 +49,10 @@ const Testimonial = () => {
   
 
   return (
-    <section className=" md:mx-20 mx-5 mb-10 py-10">
-      <h1 className={` text-5xl ${garamond.className}`}>Testimonials</h1>
+    <section className="  px-6 sm:px-12 md:px-16 lg:px-20 xl:px-28  mb-10 py-10">
+      <h1 className={`text-[#2F4137] text-5xl ${garamond.className}`}>Testimonials</h1>
 
-      <div className={`mt-16 px-10 flex relative min-h-80  items-center w-full justify-center ${mont.className} `}>
+      <div className={`mt-16 flex relative min-h-80  items-center w-full justify-center ${mont.className} `}>
         {reviews
           .filter((slide) => slide.id === activeSlide)
           .map((review, index) => (

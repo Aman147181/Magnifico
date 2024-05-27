@@ -1,21 +1,23 @@
-"use client"
-import { Image } from "@nextui-org/react"
+"use client";
+import Image from "next/image";
 import { GrLinkPrevious } from "react-icons/gr";
 import { GrLinkNext } from "react-icons/gr";
-const ReviewCard = ({ imgURL, customerName,  feedback, activeSlide, setActiveSlide }) => {
+const ReviewCard = ({
+  imgURL,
+  customerName,
+  feedback,
+  activeSlide,
+  setActiveSlide,
+}) => {
   return (
-    <div className="grid grid-cols-1  lg:grid-cols-2 gap-8 gap-y-5  text-center w-full h-full justify-center items-center ">
-      <div className="col-span-1 flex items-center justify-center ">
-        <Image
-          src={imgURL}
-          alt="customer"
-          width={300}
-          height={300}
-          
-        />
+    <div className="grid grid-cols-1  lg:grid-cols-3 gap-8 gap-y-5  text-center w-full h-full justify-center items-center ">
+      <div className="col-span-1 relative aspect-square">
+        <Image src={imgURL} alt="customer" fill />
       </div>
-      <div className="col-span-1 relative text-center items-center justify-center lg:items-start flex flex-col h-full space-y-5 sm:space-y-10">
-        <p className="mt-6  text-center lg:text-left text-sm sm:text-lg">{feedback}</p>
+      <div className=" col-span-1 lg:col-span-2 relative text-center items-center justify-center lg:items-start flex flex-col h-full space-y-5 sm:space-y-10">
+        <p className="mt-6  text-center lg:text-left text-sm sm:text-lg">
+          {feedback}
+        </p>
 
         <h3 className="mt-1  text-3xl sm:text-4xl text-center lg:text-left text-[#1a2e2e] font-bold">
           {customerName}
