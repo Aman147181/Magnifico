@@ -1,10 +1,10 @@
 "use client"
-import React from "react";
+import React, { useState } from "react";
 import validator from 'validator';
 
 const page = () => {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
