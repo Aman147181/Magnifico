@@ -11,6 +11,7 @@ export const mont = Montserrat({
   display: "swap",
 });
 const MobileSidebar = ({ onOpen, mobileopen, onMobileClose }) => {
+ 
   return (
     <div
       className={` ${
@@ -24,7 +25,7 @@ const MobileSidebar = ({ onOpen, mobileopen, onMobileClose }) => {
           mobileopen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex flex-col w-full items-center justify-center h-screen space-y-10 text-2xl sm:space-y-14 sm:text-4xl">
+        <div className="flex flex-col w-full items-center justify-center h-screen space-y-6 text-2xl sm:space-y-10 sm:text-4xl">
           <button
             className="text-white hover:text-gray-300 focus:outline-none"
             onClick={onMobileClose}
@@ -68,6 +69,16 @@ const MobileSidebar = ({ onOpen, mobileopen, onMobileClose }) => {
           >
             Make a reservation
           </button>
+          <Link
+            href="/login"> <button
+            onClick={() => {
+              onMobileClose();
+              
+            }}
+            className="block px-7 text-3xl rounded-md py-2 hover:bg-[rgb(43,41,42)] bg-[rgb(57,53,55)] text-white"
+          >
+            Login/Register
+          </button></Link>
         </div>
       </div>
     </div>
