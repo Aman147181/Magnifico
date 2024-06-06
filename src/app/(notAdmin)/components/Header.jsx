@@ -112,7 +112,7 @@ export const properties = [
     baths: 2,
     area: 12121,
     amenities: [
-      "Wifi",
+            "Wifi",
       "Wheelchair Accessible",
       "Elevator Access",
       "Balcony/Patio",
@@ -129,7 +129,47 @@ export const properties = [
 const Header = () => {
   const [showmobilemenu, setshowmobilemenu] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [value, setValue] = React.useState(null);
+  const [selectedVilla, setSelectedVilla] = useState("");
+  const [dateRange, setDateRange] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const handleSubmit = async () => {
+    if (!selectedVilla || !dateRange || !dateRange.startDate || !dateRange.endDate) {
+      alert("Please select a villa and a valid date range.");
+      return;
+    }
+
+    const reservationData = {
+      user: "USER_ID_HERE",  // Replace with actual user ID from your authentication logic
+      villa: selectedVilla,
+      startDate: dateRange.startDate.toISOString(),
+      endDate: dateRange.endDate.toISOString(),
+    };
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/reservations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reservationData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create reservation.");
+      }
+
+      alert("Reservation created successfully!");
+      onOpenChange(false);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div
       className={`flex ${mont.className}  fixed bg-white z-30 text-[#2F4137] top-0 w-full items-center justify-between px-6 sm:px-12 md:px-16 lg:px-20 xl:px-28 h-20`}
@@ -170,21 +210,29 @@ const Header = () => {
                 Book Our Villa Today
               </ModalHeader>
               <ModalBody>
-                <Select label="Select a villa" className="">
+                <Select
+                  label="Select a villa"
+                  value={selectedVilla}
+                  onChange={setSelectedVilla}
+                >
                   {properties.map((property) => (
-                    <SelectItem key={property._id} value={property._id}>
+                    <SelectItem key={property._id} value={property.name}>
                       {property.name}
                     </SelectItem>
                   ))}
                 </Select>
                 <DateRangePicker
                   label="Stay duration"
-                  value={value}
-                  onChange={setValue}
+                  value={dateRange}
+                  onChange={setDateRange}
                 />
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" onPress={onClose}>
+                <Button
+                  color="primary"
+                  onPress={handleSubmit}
+                  isLoading={isSubmitting}
+                >
                   Book Villa Now
                 </Button>
               </ModalFooter>
@@ -197,3 +245,4 @@ const Header = () => {
 };
 
 export default Header;
+

@@ -1,6 +1,6 @@
 import React from "react";
 import { Cormorant_Garamond, Montserrat } from "next/font/google";
-import Testimonial from "@/components/Testimonial";
+import Testimonial from "@/app/(notAdmin)/components/Testimonial";
 
 export const garamond = Cormorant_Garamond({
   subsets: ["latin"],
