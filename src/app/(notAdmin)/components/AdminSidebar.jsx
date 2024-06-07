@@ -20,7 +20,7 @@ const Page = () => {
   const pathname = usePathname()
   return (
     <div className="w-full bg-white flex flex-col p-6 pt-2 h-full   items-start justify-start space-y-16 ">
-      <Link href="/"><div className={`${garamond.className} uppercase text-3xl`}>
+      <Link href="/"><div className={`${garamond.className} uppercase pl-4 pt-2 text-3xl`}>
         Magnifiqo
       </div></Link>
       <div className={`${roboto.className}  text-xl flex w-full flex-col space-y-2`}>

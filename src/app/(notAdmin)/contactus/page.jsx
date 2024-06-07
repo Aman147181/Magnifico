@@ -1,46 +1,96 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Montserrat, Cormorant_Garamond } from "next/font/google";
 import Image from "next/image";
-import { Input, Textarea, AccordionItem, Accordion } from "@nextui-org/react";
+import { Input, Textarea, AccordionItem, Accordion, Button } from "@nextui-org/react";
+
 export const garamond = Cormorant_Garamond({
   subsets: ["latin"],
   display: "swap",
   weight: "500",
 });
+
 export const mont = Montserrat({
   subsets: ["latin"],
   display: "swap",
-
   weight: "500",
 });
+
 const FAQ = [
-    {
-      title: "How do I get confirmation of my reservation?",
-      content: "Once your reservation is complete, you'll receive a confirmation email containing all the details of your booking. You can also access your booking information through your user account on our website.",
-    },
-    {
-      title: "What should I do if I get an issue during my stay?",
-      content: "If you encounter any issues during your stay, please contact the accommodation provider directly or reach out to our customer support team for assistance. We are here to ensure you have a smooth and enjoyable experience.",
-    },
-    {
-      title: "What amenities are included in the villa?",
-      content: "The amenities included in each villa can vary. Please check the individual villa listing for a detailed list of amenities such as a private pool, hot tub, fully equipped kitchen, and more.",
-    },
-    {
-      title: "Can I bring my pet to the villa?",
-      content: "Pet policies vary by villa. Some villas may allow pets with an additional fee, while others may have restrictions. Please check the individual villa listing or contact us for more information on pet policies.",
-    },
-    {
-      title: "How do I check in and check out of the villa?",
-      content: "Check-in and check-out instructions will be provided in your confirmation email and on our website. Most villas offer self-check-in using a keypad or lockbox, but some may require meeting a representative on-site.",
-    },
-    {
-      title: "Is there a minimum stay requirement?",
-      content: "Minimum stay requirements can vary depending on the villa, season, and travel dates. Many villas have a minimum stay of 3-7 nights, but some may have shorter or longer minimums. Please check the individual villa listing for specific requirements.",
-    },
-  ];
-const page = () => {
+  {
+    title: "How do I get confirmation of my reservation?",
+    content: "Once your reservation is complete, you'll receive a confirmation email containing all the details of your booking. You can also access your booking information through your user account on our website.",
+  },
+  {
+    title: "What should I do if I get an issue during my stay?",
+    content: "If you encounter any issues during your stay, please contact the accommodation provider directly or reach out to our customer support team for assistance. We are here to ensure you have a smooth and enjoyable experience.",
+  },
+  {
+    title: "What amenities are included in the villa?",
+    content: "The amenities included in each villa can vary. Please check the individual villa listing for a detailed list of amenities such as a private pool, hot tub, fully equipped kitchen, and more.",
+  },
+  {
+    title: "Can I bring my pet to the villa?",
+    content: "Pet policies vary by villa. Some villas may allow pets with an additional fee, while others may have restrictions. Please check the individual villa listing or contact us for more information on pet policies.",
+  },
+  {
+    title: "How do I check in and check out of the villa?",
+    content: "Check-in and check-out instructions will be provided in your confirmation email and on our website. Most villas offer self-check-in using a keypad or lockbox, but some may require meeting a representative on-site.",
+  },
+  {
+    title: "Is there a minimum stay requirement?",
+    content: "Minimum stay requirements can vary depending on the villa, season, and travel dates. Many villas have a minimum stay of 3-7 nights, but some may have shorter or longer minimums. Please check the individual villa listing for specific requirements.",
+  },
+];
+
+const Page = () => {
+  const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    phonenumber: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("/api/message", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        // Handle success
+        console.log("Message sent successfully");
+      } else {
+        // Handle error
+        console.log("Failed to send message");
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+    finally { 
+      setFormData({
+        firstname: "",
+        lastname: "",
+        email: "",
+        phonenumber: "",
+        message: "",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col w-full px-6 sm:px-12 md:px-16 lg:px-20 xl:px-28 pb-10 mt-20">
       <div className="flex flex-col space-y-4 w-full">
@@ -53,53 +103,76 @@ const page = () => {
         <div className="relative col-span-1 aspect-square">
           <Image src="/contactus.jpg" fill alt="property image" />
         </div>
-        <div className=" grid grid-cols-1 lg:grid-cols-2 gap-8 col-span-2">
-          <div className="col-span-1 ">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-8 col-span-2">
+          <div className="col-span-1">
             <Input
               size="sm"
               type="text"
               variant="underlined"
               label="First Name"
+              name="firstname"
+              value={formData.firstname}
+              onChange={handleChange}
             />
           </div>
-          <div className="col-span-1 ">
+          <div className="col-span-1">
             <Input
               size="sm"
               type="text"
               variant="underlined"
               label="Last Name"
+              name="lastname"
+              value={formData.lastname}
+              onChange={handleChange}
             />
           </div>
-          <div className="col-span-1 ">
-            <Input size="sm" type="email" variant="underlined" label="Email" />
-          </div>
-          <div className="col-span-1 ">
+          <div className="col-span-1">
             <Input
               size="sm"
-              type="phone"
+              type="email"
               variant="underlined"
-              label="Phone Number"
+              label="Email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
             />
           </div>
-          <div className="col-span-1 lg:col-span-2 ">
+          <div className="col-span-1">
+            <Input
+              size="sm"
+              type="tel"
+              variant="underlined"
+              label="Phone Number"
+              name="phonenumber"
+              value={formData.phonenumber}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col-span-1 lg:col-span-2">
             <Textarea
               size="sm"
               type="text"
               variant="underlined"
               label="Message"
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
             />
           </div>
-        </div>
+          <div className="col-span-1 lg:col-span-2">
+            <button type="submit" className="bg-[#191818] p-5 py-2  text-white">Submit</button>
+          </div>
+        </form>
       </div>
       <div className="flex flex-col pt-20 space-y-2 w-full">
-        <h1 className={`  text-base ${mont.className}`}>FAQs</h1>
-        <h1 className={`  text-5xl ${garamond.className}`}>
+        <h1 className={` text-base ${mont.className}`}>FAQs</h1>
+        <h1 className={` text-5xl ${garamond.className}`}>
           Have Any Questions?
         </h1>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 w-full ">
         <div className="hidden lg:block col-span-1 "></div>
-              <div className={ `col-span-1 ${mont.className}`}>
+        <div className={`col-span-1 ${mont.className}`}>
           <Accordion>
             {FAQ.map((el, index) => (
               <AccordionItem key={index} title={el.title}>
@@ -113,4 +186,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
