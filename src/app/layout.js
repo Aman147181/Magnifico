@@ -1,8 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { NextUIProvider } from "@nextui-org/react";
-import Header from "@/app/(notAdmin)/components/Header";
-import Footer from "@/app/(notAdmin)/components/Footer";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {

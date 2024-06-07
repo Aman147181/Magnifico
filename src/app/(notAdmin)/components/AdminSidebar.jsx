@@ -16,7 +16,7 @@ export const roboto = Roboto_Condensed({
   subsets: ["latin"],
   display: "swap",
 });
-const page = () => {
+const Page = () => {
   const pathname = usePathname()
   return (
     <div className="w-full bg-white flex flex-col p-6 pt-2 h-full   items-start justify-start space-y-16 ">
@@ -34,4 +34,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
