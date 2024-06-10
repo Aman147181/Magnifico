@@ -6,7 +6,6 @@ import cloudinary from "@/utils/config";
 export const POST = async (request) => {
   try {
     await connectDB();
-    //   const body = await request.json();
     const formData = await request.formData();
     const images = formData
       .getAll("images")
@@ -49,16 +48,14 @@ export const POST = async (request) => {
 
       imageUploadPromises.push(result.secure_url);
 
-      // Wait for all images to upload
       const uploadedImages = await Promise.all(imageUploadPromises);
-      // Add uploaded images to the propertyData object
       villaData.images = uploadedImages;
     }
-    // Save the new villa
     const villa = new Villa(villaData);
     await villa.save();
-
-    return Response.redirect(`/admin/villa`);
+    return Response.redirect(
+      `${process.env.NEXT_PUBLIC_API_URL}/admin/villa`
+    );
   } catch (error) {
     console.error("Error in POST handler:", error);
     return new NextResponse(JSON.stringify({ error: error.message }), {

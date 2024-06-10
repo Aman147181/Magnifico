@@ -29,22 +29,25 @@ export default function App() {
   const [villa, setvilla] = useState([]);
   const [villaPerPage, setvillaPerPage] = useState(5);
   const [selectedKeys, setSelectedKeys] = useState(new Set([]));
+  const[Loading, setLoading] = useState(false);
   useEffect(() => {
     let indexOfFirstItem = (currentPage - 1) * villaPerPage;
     let indexOfLastItem = indexOfFirstItem + villaPerPage;
     setvillaToShow(() => villa?.slice(indexOfFirstItem, indexOfLastItem));
   }, [currentPage, villa, villaPerPage]);
   const fetchvilla = async () => {
+    setLoading(true);
     const response = await fetch("/api/villa");
     const data = await response.json();
     setvilla(data);
+    setLoading(false);
   };
   const [filterValue, setFilterValue] = useState("");
 
   useEffect(() => {
-    let filteredvillas = villa.filter((m) =>
-      m.name.toLowerCase().includes(filterValue.toLowerCase()) ||
-      m.location.toLowerCase().includes(filterValue.toLowerCase()) 
+    let filteredvillas = villa.filter((v) =>
+      v.name.toLowerCase().includes(filterValue.toLowerCase()) ||
+      v.location.toLowerCase().includes(filterValue.toLowerCase()) 
      
     );
 
@@ -61,11 +64,7 @@ export default function App() {
     setFilterValue("");
     setCurrentPage(1); 
   };
-  const rowOption = [
-    { label: 5, value: 5 },
-    { label: 10, value: 10 },
-   
-  ];
+
   const handleDelete = async () => {
     let selectedIds = null;
     if (selectedKeys?.size === 0) return;
@@ -137,10 +136,12 @@ export default function App() {
         )}
       </div>
       <Table
+       
         selectionMode="multiple"
         selectedKeys={selectedKeys}
         onSelectionChange={setSelectedKeys}
         aria-label="Example table with client side pagination"
+        
         bottomContent={
           villa?.length > 0 && (
             <div className="flex w-full justify-between">
@@ -152,9 +153,9 @@ export default function App() {
                 page={currentPage}
                 variant="light"
                 total={Math.ceil(
-                  villa.filter((m) =>
-                    m.name.toLowerCase().includes(filterValue.toLowerCase()) ||
-                    m.location.toLowerCase().includes(filterValue.toLowerCase()) 
+                  villa.filter((v) =>
+                    v.name.toLowerCase().includes(filterValue.toLowerCase()) ||
+                    v.location.toLowerCase().includes(filterValue.toLowerCase()) 
                     
                    
                   ).length / villaPerPage
@@ -172,7 +173,6 @@ export default function App() {
                 >
                   <option value="5">5</option>
                   <option value="10">10</option>
-                  <option value="15">15</option>
                 </select>
               </label>
             </div>
@@ -183,14 +183,14 @@ export default function App() {
         }}
       >
         <TableHeader>
-          <TableColumn key="image"> Image</TableColumn>
+          <TableColumn minWidth={70} key="image"> Image</TableColumn>
           <TableColumn key="name"> Name</TableColumn>
           <TableColumn key="description">Description</TableColumn>
           <TableColumn key="location">location</TableColumn>
           <TableColumn key="pricePerNight">Price per night</TableColumn>
           <TableColumn key="people">No. of people</TableColumn>
         </TableHeader>
-        <TableBody emptyContent={"No villas to display."}>
+        <TableBody  isLoading={Loading} loadingContent="Loading..." emptyContent={"No villas to display."}>
           {villaToShow?.map((item) => (
             <TableRow key={item?._id}>
               <TableCell>

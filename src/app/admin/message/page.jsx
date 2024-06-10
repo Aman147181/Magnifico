@@ -20,7 +20,7 @@ export default function App() {
   const [messagePerPage, setMessagePerPage] = useState(5);
   const [selectedKeys, setSelectedKeys] = useState(new Set([]));
   const [filterValue, setFilterValue] = useState("");
-
+const [Loading, setLoading] = useState(false);
   useEffect(() => {
     let filteredMessages = message.filter((m) =>
       m.firstname.toLowerCase().includes(filterValue.toLowerCase()) ||
@@ -35,9 +35,11 @@ export default function App() {
   }, [currentPage, message, messagePerPage, filterValue]);
 
   const fetchMessage = async () => {
+    setLoading(true);
     const response = await fetch("/api/message");
     const data = await response.json();
     setMessage(data);
+    setLoading(false);
   };
 
   const rowOption = [
@@ -163,7 +165,7 @@ export default function App() {
           <TableColumn key="message">Message</TableColumn>
           <TableColumn key="phone">Phone Number</TableColumn>
         </TableHeader>
-        <TableBody emptyContent={"No messages to display."}>
+        <TableBody isLoading={Loading} loadingContent="Loading..." emptyContent={"No messages to display."}>
           {messageToShow?.map((item) => (
             <TableRow key={item?._id}>
               <TableCell>{item?.firstname}</TableCell>

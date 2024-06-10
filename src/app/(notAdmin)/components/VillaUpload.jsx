@@ -65,44 +65,12 @@ const VillaAddForm = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("/api/villa", {
-        method: "POST",
-        body: JSON.stringify(fields),
-      });
-
-      if (response.ok) {
-        alert("Villa added successfully!");
-        setFields({
-          name: "",
-          location: "",
-          pricePerNight: "",
-          description: "",
-          area: 100,
-          bathroom: 1,
-          people: 2,
-          images: [],
-          highlights: [],
-        });
-        setNumHighlights(0);
-        setHighlights([]);
-      } else {
-        alert("Failed to add villa.");
-      }
-    } catch (error) {
-      console.error(
-        "Error adding villa jashdkjsh asjdhajhd aksjhdasjhasjdhns :",
-        error
-      );
-    }
-  };
+  
 
   return (
     mounted && (
       <form
-        action="/api/villa"
+      action={ `${process.env.NEXT_PUBLIC_API_URL}/api/villa`}
         method="POST"
         encType="multipart/form-data"
         className="p-2"
