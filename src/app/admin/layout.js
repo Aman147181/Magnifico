@@ -6,7 +6,7 @@ export default function AdminLayout({ children }) {
         <AdminSidebar />
       </div>
       <div className="col-span-4 overflow-auto">
-        <div className="fixed h-16 top-0 bg-white flex w-full"></div>
+        <div className="fixed h-16 top-0 bg-white z-20 flex w-full"></div>
         {children}
       </div>
     </div>

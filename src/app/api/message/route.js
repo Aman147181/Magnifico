@@ -6,7 +6,6 @@ export const POST = async (request) => {
     await connectDB();
     console.log(request);
     const body = await request.json();
-    console.log(body, "body!!!!!");
     const message = new Message(body);
     await message.save();
     return new NextResponse(JSON.stringify(message), { status: 200 });
