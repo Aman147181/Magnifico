@@ -22,7 +22,7 @@ const FeaturedVilla = () => {
   const [villa, setVilla] = useState([]);
 
   async function getFeaturedVilla() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/villa`);
+    const res = await fetch(`/api/villa`);
     const data = await res.json();
     setVilla(data);
   }
