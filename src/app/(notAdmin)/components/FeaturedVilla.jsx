@@ -21,7 +21,7 @@ async function getFeaturedVilla() {
   const data = await res.json();
   return data;
 }
- export const FeaturedVilla = async() => {
+ const FeaturedVilla = async() => {
    const villa =  await getFeaturedVilla();
    console.log(villa,"asjsdj nasjadskj asjdhaskjdas ");
   return (
