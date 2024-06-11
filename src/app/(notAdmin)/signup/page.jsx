@@ -1,14 +1,16 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import validator from "validator";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { toast } from "react-toastify";
-import Cookies from "js-cookie";
+import validator from 'validator';
 const Page = () => {
   const [formData, setFormData] = useState({
+    username: "",
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,33 +22,34 @@ const Page = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validator.isEmail(formData.email)) {
       toast.error("Invalid email address");
       return;
     }
-    const response = await fetch("/api/login", {
+    const response = await fetch("/api/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({
+        name: formData.username,
+        email: formData.email,
+        password: formData.password,
+      }),
     });
 
     if (response.ok) {
-      const json = await response.json();
-      console.log(json.token);
-      Cookies.set("Authorization", json.token, {
-        secure: true,
-        httpOnly: false,
-        expires: Date.now() + 60 * 60 * 24 * 1000 * 3,
-        path: "/",
-      });
-      toast.success("Login successful");
+      // handle successful signup
+      toast.success("Signup successful");
     } else {
       const error = await response.json();
-      console.log(error)
       toast.error(`${error.message}`);
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -54,15 +57,32 @@ const Page = () => {
       <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 max-w-xs sm:max-w-md xl:p-0">
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
-            Sign in to your account
+            Create new account
           </h1>
           <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <label
+                htmlFor="username"
+                className="block mb-2 text-sm font-medium text-gray-900"
+              >
+                Username
+              </label>
+              <input
+                type="text"
+                name="username"
+                id="username"
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder="John Doe"
+                value={formData.username}
+                onChange={handleChange}
+              />
+            </div>
             <div>
               <label
                 htmlFor="email"
                 className="block mb-2 text-sm font-medium text-gray-900"
               >
-                Your email
+                Email
               </label>
               <input
                 type="email"
@@ -81,16 +101,26 @@ const Page = () => {
               >
                 Password
               </label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="••••••••"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                value={formData.password}
-                onChange={handleChange}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                <div
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+                  onClick={togglePasswordVisibility}
+                >
+                  {formData.password &&
+                    (showPassword ? <AiFillEyeInvisible /> : <AiFillEye />)}
+                </div>
+              </div>
             </div>
+
             <div className="flex items-center justify-between">
               <div className="flex items-start">
                 <div className="flex items-center h-5">
@@ -119,15 +149,15 @@ const Page = () => {
               type="submit"
               className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
             >
-              Sign in
+              Sign up
             </button>
             <p className="text-sm font-light text-gray-500">
-              Don’t have an account yet?{" "}
+              Already have an account?{" "}
               <Link
-                href="/signup"
+                href="/login"
                 className="font-medium text-primary-600 hover:underline"
               >
-                Sign up
+                Sign in
               </Link>
             </p>
           </form>

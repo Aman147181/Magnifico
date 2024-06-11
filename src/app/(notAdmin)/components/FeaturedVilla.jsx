@@ -31,7 +31,6 @@ const FeaturedVilla = () => {
     getFeaturedVilla();
   }, []);
 
-  console.log(villa, "asjsj nasjadskj asjdhaskjdas ");
   return (
     <div className="flex w-full flex-col space-y-10 py-12 px-6 sm:px-12 md:px-16 lg:px-20 xl:px-28">
       <div className="grid gap-y-6 grid-cols-1 md:grid-cols-2 w-full">
