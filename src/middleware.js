@@ -1,8 +1,9 @@
 import { jwtVerify } from "jose";
 import { NextResponse } from "next/server";
-import { toast } from "react-toastify";
+
 export async function middleware(request) {
   const cookie = request.cookies.get("Authorization");
+  console.log(cookie, "cookie");
 
   if (!cookie) {
     return NextResponse.redirect(new URL("/login", request.url));
@@ -13,16 +14,24 @@ export async function middleware(request) {
       cookie.value,
       new TextEncoder().encode(process.env.JWT_SECRET)
     );
-    if (decoded.payload.role !== "admin") {
+
+    const pathname = new URL(request.url).pathname;
+
+    // Check if the request is for the admin page and if the user is an admin
+    if (pathname.startsWith("/admin") && decoded.payload.role !== "admin") {
       return NextResponse.redirect(new URL("/login", request.url));
     }
+   
   } catch (err) {
     console.error("JWT verification failed:", err.message);
     return NextResponse.redirect(new URL("/login", request.url));
   }
+
+  // Allow access to other pages if needed
+  return NextResponse.next();
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: "/admin/:path*",
+  matcher: ["/admin/:path*", "/profile"],
 };

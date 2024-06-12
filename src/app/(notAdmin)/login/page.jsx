@@ -3,12 +3,17 @@ import React, { useState } from "react";
 import Link from "next/link";
 import validator from "validator";
 import { toast } from "react-toastify";
-import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+
 const Page = () => {
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,20 +38,17 @@ const Page = () => {
     });
 
     if (response.ok) {
-      const json = await response.json();
-      console.log(json.token);
-      Cookies.set("Authorization", json.token, {
-        secure: true,
-        httpOnly: false,
-        expires: Date.now() + 60 * 60 * 24 * 1000 * 3,
-        path: "/",
-      });
       toast.success("Login successful");
+      router.push("/");
     } else {
       const error = await response.json();
-      console.log(error)
+      console.log(error);
       toast.error(`${error.message}`);
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -81,15 +83,23 @@ const Page = () => {
               >
                 Password
               </label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="••••••••"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                value={formData.password}
-                onChange={handleChange}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                <div
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+                </div>
+              </div>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-start">

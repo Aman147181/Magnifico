@@ -4,7 +4,10 @@ import Link from "next/link";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { toast } from "react-toastify";
 import validator from 'validator';
+import { useRouter } from "next/navigation";
 const Page = () => {
+  
+const router = useRouter()
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -42,6 +45,7 @@ const Page = () => {
     if (response.ok) {
       // handle successful signup
       toast.success("Signup successful");
+      router.push("/login");
     } else {
       const error = await response.json();
       toast.error(`${error.message}`);

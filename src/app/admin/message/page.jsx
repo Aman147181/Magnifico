@@ -38,7 +38,9 @@ const [Loading, setLoading] = useState(false);
     setLoading(true);
     const response = await fetch("/api/message");
     const data = await response.json();
+    console.log(data)
     setMessage(data);
+    console.log(message);
     setLoading(false);
   };
 
