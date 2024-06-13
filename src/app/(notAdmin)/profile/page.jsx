@@ -19,35 +19,38 @@ const Profile = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
-    image: [],
+    image: null,
     phoneNumber: "",
+    nationality: "",
   });
+  const fetchUserData = async () => {
+    try {
+      setLoading(true);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("/api/profile");
-        if (!response.ok) {
-          toast.error("Failed to fetch user data");
-          return;
-        }
-        const data = await response.json();
-        console.log(data);
-        setSession(data.user);
-        setFormData({
-          username: data.user.name,
-
-          password: "",
-          image: [],
-          phoneNumber: data.user.phoneNumber || "",
-        });
-      } catch (error) {
-        toast.error(error.message);
-      } finally {
-        setLoading(false);
+      const response = await fetch("/api/profile");
+      if (!response.ok) {
+        toast.error("Failed to fetch user data");
+        return;
       }
-    };
+      const data = await response.json();
+      console.log(data);
+      setSession(data.user);
+      setFormData({
+        username: data.user.name,
+
+        password: "",
+        image: null,
+        phoneNumber: data.user.phoneNumber || "",
+        nationality: data.user.nationality || "",
+      });
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+   
 
     fetchUserData();
   }, []);
@@ -62,16 +65,75 @@ const Profile = () => {
 
   const handleImageChange = (e) => {
     const { files } = e.target;
-    const updatedImages = [...formData.image];
+    if (files.length > 0) {
+      const file = files[0];
 
-    for (const file of files) {
-      updatedImages.push(URL.createObjectURL(file));
+      setFormData((prevFields) => ({
+        ...prevFields,
+        image: file,
+      }));
     }
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    setFormData((prevFields) => ({
-      ...prevFields,
-      image: updatedImages,
-    }));
+    try {
+      let imageUrl = null;
+
+      if (formData.image) {
+        // Convert image to base64
+        const reader = new FileReader();
+        reader.readAsDataURL(formData.image);
+        reader.onloadend = async () => {
+          imageUrl = reader.result;
+
+          const response = await fetch(`/api/profile/`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ...formData,
+              image: imageUrl,
+            }),
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message);
+          }
+
+          toast.success("Profile updated successfully");
+          onOpenChange(false); // Close the modal
+          fetchUserData();
+        
+        };
+      } else {
+        const response = await fetch(`/api/profile`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            image: imageUrl,
+          }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message);
+        }
+
+        toast.success("Profile updated successfully");
+        onOpenChange(false); // Close the modal
+       
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+      fetchUserData();
+    }
   };
 
   if (loading)
@@ -153,11 +215,7 @@ const Profile = () => {
                   Edit Profile
                 </ModalHeader>
                 <ModalBody>
-                  <form
-                    action={`${process.env.NEXT_PUBLIC_API_URL}/api/profile/edit`}
-                    method = "PUT"
-                    encType="multipart/form-data"
-                  >
+                  <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                       <label
                         htmlFor="username"
@@ -219,6 +277,22 @@ const Profile = () => {
                         id="phoneNumber"
                         name="phoneNumber"
                         value={formData.phoneNumber}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label
+                        htmlFor="phoneNumber"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Nationality
+                      </label>
+                      <input
+                        type="text"
+                        id="nationality"
+                        name="nationality"
+                        value={formData.nationality}
                         onChange={handleChange}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       />

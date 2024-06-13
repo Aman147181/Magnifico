@@ -53,9 +53,7 @@ export const POST = async (request) => {
     }
     const villa = new Villa(villaData);
     await villa.save();
-    return Response.redirect(
-      `${process.env.NEXT_PUBLIC_API_URL}/admin/villa`
-    );
+    return Response.redirect(`${process.env.NEXT_PUBLIC_API_URL}/admin/villa`);
   } catch (error) {
     console.error("Error in POST handler:", error);
     return new NextResponse(JSON.stringify({ error: error.message }), {

@@ -12,6 +12,7 @@ import {
   Input,
   Button,
 } from "@nextui-org/react";
+import { toast } from "react-toastify";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -72,9 +73,10 @@ const [Loading, setLoading] = useState(false);
       if (response.ok) {
         fetchMessage();
         setSelectedKeys(new Set());
+        toast.success("Messages deleted successfully");
       }
     } catch (error) {
-      console.error("Error deleting messages:", error);
+      toast.error(error.message);
     }
   };
 

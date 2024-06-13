@@ -14,6 +14,7 @@ import {
   Spinner,
   User,
 } from "@nextui-org/react";
+import { toast } from "react-toastify";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -72,9 +73,10 @@ export default function App() {
       if (response.ok) {
         fetchuser();
         setSelectedKeys(new Set());
+        toast.success("Users deleted successfully");
       }
     } catch (error) {
-      console.error("Error deleting users:", error);
+      toast.error(error.message);
     }
   };
 
@@ -101,9 +103,15 @@ export default function App() {
       if (response.ok) {
         fetchuser();
         setSelectedKeys(new Set());
+        toast.success("Users updated successfully");
+      }else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to update users");
       }
+
     } catch (error) {
       console.error("Error editing users:", error);
+      toast.error(`Error: ${error.message}`);
     }
   };
 
@@ -139,7 +147,7 @@ export default function App() {
             onClear={onClear}
             onValueChange={onSearchChange}
           />
-         <div className="flex justify-center space-x-3 w-full mb-3 items-center">
+         <div className="flex justify-center space-x-3  mb-3 items-center">
          {(selectedKeys?.size > 0 || selectedKeys === "all") && (
             <Button
               onClick={handleDelete}
@@ -155,7 +163,7 @@ export default function App() {
               className="max-w-[200px] mt-6"
               color="primary"
             >
-              Delete
+              Change Role
             </Button>
           )}
           </div>
