@@ -222,12 +222,14 @@ export default function App() {
           }}
         >
           <TableHeader>
-            <TableColumn maxWidth="sm" key="user">
+            <TableColumn  key="user">
               User
             </TableColumn>
 
             <TableColumn key="role">Role</TableColumn>
             <TableColumn key="phone">Phone Number</TableColumn>
+            <TableColumn key="country">Nationality</TableColumn>
+
           </TableHeader>
           <TableBody
             isLoading={Loading}
@@ -247,7 +249,9 @@ export default function App() {
                   </User>
                 </TableCell>
                 <TableCell>{item?.role}</TableCell>
-                <TableCell>{item?.phone}</TableCell>
+                <TableCell>{item?.phoneNumber}</TableCell>
+                <TableCell>{item?.nationality}</TableCell>
+
               </TableRow>
             ))}
           </TableBody>

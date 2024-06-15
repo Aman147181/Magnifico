@@ -8,7 +8,7 @@ import cloudinary from "@/utils/config";
 export const GET = async (request) => {
   try {
     await connectDB();
-    const cookie = request.cookies.get("Authorization");
+    const cookie = await request.cookies.get("Authorization");
     const decoded = await jwtVerify(
       cookie.value,
       new TextEncoder().encode(process.env.JWT_SECRET)
@@ -35,7 +35,7 @@ export const POST = async (request) => {
   try {
     await connectDB();
     const body = await request.json();
-    const cookie = request.cookies.get('Authorization');
+    const cookie = await request.cookies.get('Authorization');
     if (!cookie) {
       return new NextResponse(JSON.stringify({ error: 'Authorization cookie missing' }), { status: 401 });
     }

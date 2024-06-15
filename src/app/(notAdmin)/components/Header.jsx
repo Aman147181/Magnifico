@@ -1,10 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MobileSidebar from "./MobileNavbar";
 import { EB_Garamond, Montserrat } from "next/font/google";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { Select, SelectItem } from "@nextui-org/react";
 import Link from "next/link";
+import { Input } from "@nextui-org/react";
+import { IoMdPeople } from "react-icons/io";
 import {
   Modal,
   ModalContent,
@@ -15,6 +16,7 @@ import {
   useDisclosure,
   DateRangePicker,
 } from "@nextui-org/react";
+import { toast } from "react-toastify";
 
 export const garamond = EB_Garamond({
   subsets: ["latin"],
@@ -24,126 +26,58 @@ export const mont = Montserrat({
   subsets: ["latin"],
   display: "swap",
 });
-export const properties = [
-  {
-    location: {
-      street: "hetauda",
-      city: "hetauda",
-      state: "bagmati",
-      zipcode: "44100",
-    },
-    seller_info: {
-      name: "Aman Shrestha",
-      email: "aman.752417@thc.tu.edu.np",
-      phone: "9823576445",
-    },
-    _id: "66436100cc3f9dadf106396b",
-    owner: "663d0219e23fe7c4e8605887",
-    name: "Mountain View Condos",
-    type: "Apartment",
-    description:
-      "Nestled in the heart of nature, this property offers a retreat from the hustle and bustle of city life. This exquisite villa boasts stunning panoramic views of lush greenery and serene waters, creating an oasis of tranquility. The spacious interior features luxurious amenities, including a gourmet kitchen, expansive living areas, and elegant bedrooms with en-suite bathrooms.",
-    beds: 4,
-    baths: 2,
-    area: 1212,
-    amenities: ["Full Kitchen", "Swimming Pool"],
-    price: 11999999,
-    images: ["/villaone.jpg"],
-    is_featured: false,
-    createdAt: "2024-05-14T13:02:56.557Z",
-    updatedAt: "2024-05-14T13:02:56.557Z",
-    __v: 0,
-  },
-  {
-    location: {
-      street: "this street",
-      city: "london",
-      state: "britain",
-      zipcode: "23231",
-    },
-    seller_info: {
-      name: "Aman Shrestha",
-      email: "aman.752417@thc.tu.edu.np",
-      phone: "9823576415",
-    },
-    _id: "66464e878101d3a52207c8bf",
-    owner: "663d0219e23fe7c4e8605887",
-    name: "beautiful apartment in london",
-    type: "Apartment",
-    description:
-      "Nestled in the heart of nature, this property offers a retreat from the hustle and bustle of city life. This exquisite villa boasts stunning panoramic views of lush greenery and serene waters, creating an oasis of tranquility. The spacious interior features luxurious amenities, including a gourmet kitchen, expansive living areas, and elegant bedrooms with en-suite bathrooms.",
-    google: "https://maps.app.goo.gl/PKsis7FcePEPCG9N8",
-    beds: 2,
-    baths: 3,
-    area: 12000,
-    amenities: [
-      "Swimming Pool",
-      "Elevator Access",
-      "Gym/Fitness Center",
-      "Smart TV",
-    ],
-    price: 1200000,
-    images: ["/villatwo.jpg"],
-    is_featured: false,
-    createdAt: "2024-05-16T18:20:55.311Z",
-    updatedAt: "2024-05-16T18:20:55.311Z",
-    __v: 0,
-  },
-  {
-    location: {
-      street: "hetauda",
-      city: "hetauda",
-      state: "bagmati",
-      zipcode: "44100",
-    },
-    seller_info: {
-      name: "Roshan Subedi",
-      email: "roshan.232123@thc.tu.edu.np",
-      phone: "9898982312",
-    },
-    _id: "66464f168101d3a52207c8c8",
-    owner: "663d0219e23fe7c4e8605887",
-    name: "Astonishing Furnished Room",
-    type: "Room",
-    description:
-      "Nestled in the heart of nature, this property offers a retreat from the hustle and bustle of city life. This exquisite villa boasts stunning panoramic views of lush greenery and serene waters, creating an oasis of tranquility. The spacious interior features luxurious amenities, including a gourmet kitchen, expansive living areas, and elegant bedrooms with en-suite bathrooms.",
-    google: "https://maps.app.goo.gl/PKsis7FcePEPCG9N8",
-    beds: 3,
-    baths: 2,
-    area: 12121,
-    amenities: [
-            "Wifi",
-      "Wheelchair Accessible",
-      "Elevator Access",
-      "Balcony/Patio",
-    ],
-    price: 12000,
-    images: ["/villathree.jpg"],
-    is_featured: false,
-    createdAt: "2024-05-16T18:23:18.997Z",
-    updatedAt: "2024-05-16T18:23:18.997Z",
-    __v: 0,
-  },
-];
 
 const Header = () => {
-  const [showmobilemenu, setshowmobilemenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [selectedVilla, setSelectedVilla] = useState("");
-  const [dateRange, setDateRange] = useState(null);
+  const [numberOfGuests, setNumberOfGuests] = useState(1);
+  const [value, setValue] = React.useState({
+    start: null,
+    end: null,
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const [villas, setVillas] = useState([]);
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch("/api/profile");
+        if (!response.ok) {
+          console.error("Failed to fetch user data");
+          return;
+        }
+        const data = await response.json();
+        setSession(data.user);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    const fetchVillas = async () => {
+      const response = await fetch("/api/villa");
+      const data = await response.json();
+      setVillas(data);
+    };
+    fetchVillas();
+  }, []);
+
   const handleSubmit = async () => {
-    if (!selectedVilla || !dateRange || !dateRange.startDate || !dateRange.endDate) {
-      alert("Please select a villa and a valid date range.");
+    if (!selectedVilla || !value || !value.start || !value.end || !numberOfGuests || !numberOfGuests > 0) {
+      toast.error("Please select a villa, valid date range and a valid number of guests.");
       return;
     }
 
     const reservationData = {
-      user: "USER_ID_HERE",  // Replace with actual user ID from your authentication logic
+      user: session?._id,
       villa: selectedVilla,
-      startDate: dateRange.startDate.toISOString(),
-      endDate: dateRange.endDate.toISOString(),
+      startDate: value.start,
+      endDate: value.end,
+      numberOfGuests: numberOfGuests,
     };
 
     setIsSubmitting(true);
@@ -158,13 +92,16 @@ const Header = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create reservation.");
+        const errorData = await response.json();
+        console.error("Reservation error:", errorData);
+        throw new Error(errorData.message || "Failed to create reservation");
       }
 
-      alert("Reservation created successfully!");
+      toast.success("Reservation created successfully!");
       onOpenChange(false);
     } catch (error) {
-      alert(error.message);
+      console.error("Reservation submission error:", error);
+      toast.error(error.message || "Failed to create reservation");
     } finally {
       setIsSubmitting(false);
     }
@@ -172,15 +109,15 @@ const Header = () => {
 
   return (
     <div
-      className={`flex ${mont.className}  fixed bg-white z-30 text-[#2F4137] top-0 w-full items-center justify-between px-6 sm:px-12 md:px-16 lg:px-20 xl:px-28 h-20`}
+      className={`flex ${mont.className} fixed bg-white z-30 text-[#2F4137] top-0 w-full items-center justify-between px-6 sm:px-12 md:px-16 lg:px-20 xl:px-28 h-20`}
     >
       <MobileSidebar
         onOpen={onOpen}
-        mobileopen={showmobilemenu}
-        onMobileClose={() => setshowmobilemenu(false)}
+        mobileopen={showMobileMenu}
+        onMobileClose={() => setShowMobileMenu(false)}
       />
       <button
-        onClick={() => setshowmobilemenu((el) => !el)}
+        onClick={() => setShowMobileMenu((prev) => !prev)}
         className="hover:text-[#D39364] uppercase flex items-center"
       >
         <GiHamburgerMenu />
@@ -210,21 +147,37 @@ const Header = () => {
                 Book Our Villa Today
               </ModalHeader>
               <ModalBody>
-                <Select
-                  label="Select a villa"
+                <select
+                  id="villaSelect"
                   value={selectedVilla}
-                  onChange={setSelectedVilla}
+                  onChange={(e) => setSelectedVilla(e.target.value)}
+                  className="mt-1 block w-full pl-3 pr-2 py-4 text-base bg-[#f4f4f5] focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-lg"
                 >
-                  {properties.map((property) => (
-                    <SelectItem key={property._id} value={property.name}>
+                  <option value="" disabled>
+                    Select a villa
+                  </option>
+                  {villas?.map((property) => (
+                    <option key={property._id} value={property._id}>
                       {property.name}
-                    </SelectItem>
+                    </option>
                   ))}
-                </Select>
+                </select>
+                <Input
+                  type="number"
+                  label="Number of guests"
+                  value={numberOfGuests}
+                  onChange={(e) => setNumberOfGuests(e.target.value)}
+                  labelPlacement="outside"
+                  startContent={
+                    <div className="pointer-events-none flex items-center">
+                      <IoMdPeople />
+                    </div>
+                  }
+                />
                 <DateRangePicker
                   label="Stay duration"
-                  value={dateRange}
-                  onChange={setDateRange}
+                  value={value}
+                  onChange={setValue}
                 />
               </ModalBody>
               <ModalFooter>
@@ -245,4 +198,3 @@ const Header = () => {
 };
 
 export default Header;
-

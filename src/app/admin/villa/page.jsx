@@ -29,7 +29,7 @@ export default function App() {
   const [villa, setvilla] = useState([]);
   const [villaPerPage, setvillaPerPage] = useState(5);
   const [selectedKeys, setSelectedKeys] = useState(new Set([]));
-  const[Loading, setLoading] = useState(false);
+  const [Loading, setLoading] = useState(false);
   useEffect(() => {
     let indexOfFirstItem = (currentPage - 1) * villaPerPage;
     let indexOfLastItem = indexOfFirstItem + villaPerPage;
@@ -45,10 +45,10 @@ export default function App() {
   const [filterValue, setFilterValue] = useState("");
 
   useEffect(() => {
-    let filteredvillas = villa.filter((v) =>
-      v.name.toLowerCase().includes(filterValue.toLowerCase()) ||
-      v.location.toLowerCase().includes(filterValue.toLowerCase()) 
-     
+    let filteredvillas = villa.filter(
+      (v) =>
+        v.name.toLowerCase().includes(filterValue.toLowerCase()) ||
+        v.location.toLowerCase().includes(filterValue.toLowerCase())
     );
 
     let indexOfFirstItem = (currentPage - 1) * villaPerPage;
@@ -57,12 +57,12 @@ export default function App() {
   }, [currentPage, villa, villaPerPage, filterValue]);
   const onSearchChange = (value) => {
     setFilterValue(value);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const onClear = () => {
     setFilterValue("");
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const handleDelete = async () => {
@@ -71,8 +71,7 @@ export default function App() {
     if (selectedKeys === "all") {
       let all = new Set(villa.map((m) => m._id));
       selectedIds = Array.from(all);
-    }
-    else {
+    } else {
       selectedIds = Array.from(selectedKeys);
     }
 
@@ -101,7 +100,7 @@ export default function App() {
   return (
     <div className="flex mt-20 flex-col  w-full p-10">
       <Button color="primary" className="max-w-32 mb-3" onPress={onOpen}>
-        Add Villa 
+        Add Villa
       </Button>
       <Modal
         size="4xl"
@@ -130,22 +129,24 @@ export default function App() {
           onValueChange={onSearchChange}
         />
         {(selectedKeys?.size > 0 || selectedKeys === "all") && (
-          <Button onClick={handleDelete} className="max-w-[200px] mt-6" color="danger">
+          <Button
+            onClick={handleDelete}
+            className="max-w-[200px] mt-6"
+            color="danger"
+          >
             Delete
           </Button>
         )}
       </div>
       <Table
-       
         selectionMode="multiple"
         selectedKeys={selectedKeys}
         onSelectionChange={setSelectedKeys}
         aria-label="Example table with client side pagination"
-        
         bottomContent={
           villa?.length > 0 && (
             <div className="flex w-full justify-between">
-             <Pagination
+              <Pagination
                 showControls
                 showShadow
                 color="primary"
@@ -153,11 +154,14 @@ export default function App() {
                 page={currentPage}
                 variant="light"
                 total={Math.ceil(
-                  villa.filter((v) =>
-                    v.name.toLowerCase().includes(filterValue.toLowerCase()) ||
-                    v.location.toLowerCase().includes(filterValue.toLowerCase()) 
-                    
-                   
+                  villa.filter(
+                    (v) =>
+                      v.name
+                        .toLowerCase()
+                        .includes(filterValue.toLowerCase()) ||
+                      v.location
+                        .toLowerCase()
+                        .includes(filterValue.toLowerCase())
                   ).length / villaPerPage
                 )}
                 onChange={(page) => setCurrentPage(page)}
@@ -183,14 +187,21 @@ export default function App() {
         }}
       >
         <TableHeader>
-          <TableColumn minWidth={70} key="image"> Image</TableColumn>
+          <TableColumn minWidth={70} key="image">
+            {" "}
+            Image
+          </TableColumn>
           <TableColumn key="name"> Name</TableColumn>
           <TableColumn key="description">Description</TableColumn>
           <TableColumn key="location">location</TableColumn>
           <TableColumn key="pricePerNight">Price per night</TableColumn>
           <TableColumn key="people">No. of people</TableColumn>
         </TableHeader>
-        <TableBody  isLoading={Loading} loadingContent="Loading..." emptyContent={"No villas to display."}>
+        <TableBody
+          isLoading={Loading}
+          loadingContent="Loading..."
+          emptyContent={"No villas to display."}
+        >
           {villaToShow?.map((item) => (
             <TableRow key={item?._id}>
               <TableCell>

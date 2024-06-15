@@ -1,5 +1,16 @@
 import mongoose from "mongoose";
 
+
+
+// Define the schema for the date details
+const DateDetailsSchema = new mongoose.Schema({
+  era: { type: String, required: true },
+  year: { type: Number, required: true },
+  month: { type: Number, required: true },
+  day: { type: Number, required: true }
+});
+
+// Define the reservation schema
 const reservationSchema = new mongoose.Schema(
   {
     user: {
@@ -8,30 +19,37 @@ const reservationSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    // villa: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: 'Villa',
-    //   required: true,
-    //   index: true,
-    // },
-    villa: {
+    username: {
       type: String,
-
       required: true,
     },
-    startDate: {
-      type: Date,
+    villaname: {
+      type: String,
       required: true,
     },
-    endDate: {
-      type: Date,
+    cost: {
+      type: Number,
       required: true,
-      validate: {
-        validator: function (value) {
-          return value > this.startDate;
-        },
-        message: "End date must be after start date.",
-      },
+      default: 0,
+    },
+    villa: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Villa",
+      required: true,
+      index: true,
+    },
+    numberOfGuests: {
+      type: Number,
+      required: true,
+      default: 1,
+    },
+    start: {
+      type: DateDetailsSchema,
+      required: true,
+    },
+    end: {
+      type: DateDetailsSchema,
+      required: true,
     },
     status: {
       type: String,
@@ -42,22 +60,4 @@ const reservationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Ensure no overlapping reservations for the same villa
-reservationSchema.pre("save", async function (next) {
-  const existingReservations = await mongoose.models.Reservation.find({
-    villa: this.villa,
-    _id: { $ne: this._id },
-    $or: [
-      { startDate: { $lt: this.endDate, $gte: this.startDate } },
-      { endDate: { $gt: this.startDate, $lte: this.endDate } },
-      { startDate: { $lte: this.startDate }, endDate: { $gte: this.endDate } },
-    ],
-  });
-  if (existingReservations.length > 0) {
-    throw new Error("The villa is already reserved for the selected dates.");
-  }
-  next();
-});
-
-export default mongoose.models.Reservation ||
-  mongoose.model("Reservation", reservationSchema);
+export default mongoose.models.Reservation || mongoose.model("Reservation", reservationSchema);
