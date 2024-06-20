@@ -40,15 +40,16 @@ const FeaturedVilla = () => {
           </h1>
         </div>
         <div className="col-span-1 flex justify-start md:justify-end items-center">
+          <Link href={"/villa"}>
           <button className="sm:h-16 h-12 w-56 sm:w-72 bg-[#883C36] text-white transition-all duration-200 hover:bg-[#393537]">
-            View all Villas and Rooms
-          </button>
+            View all Villas 
+          </button></Link> 
         </div>
       </div>
 
       <div className="grid pb-10 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 pt-10 sm:gap-16 md:gap-12 lg:gap-10 gap-y-12">
         {villa?.slice(0, 3).map((info, index) => (
-          <Link key={index} href="/">
+          <Link key={index} href={ `/villa/${info._id}`}>
             <div
               className={`flex flex-col item-center w-full justify-start space-y-5 ${montserrat.className}`}
             >

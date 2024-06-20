@@ -74,6 +74,8 @@ export const GET = async () => {
     });
   }
 };
+
+
 export const DELETE = async (request) => {
   try {
     await connectDB();

@@ -87,11 +87,11 @@ const MobileSidebar = ({ onOpen, mobileopen, onMobileClose }) => {
             Contact Us
           </Link>
           <Link
-            href="/property"
+            href="/villa"
             onClick={onMobileClose}
             className="block py-2 hover:text-gray-400 text-white"
           >
-            Properties
+            Villas
           </Link>
           <button
             onClick={() => {

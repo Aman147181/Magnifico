@@ -27,7 +27,7 @@ export const POST = async (request) => {
     const reserveUser = await User.findById(user);
     if (!reserveUser) {
       return new NextResponse(
-        JSON.stringify({ message: "User not found" }),
+        JSON.stringify({ message: "User not logged in!" }),
         { status: 404 }
       );
     }
@@ -147,7 +147,18 @@ console.log(status, "status")
 
     const reservation = await Reservation.findById(ids[0]);
 
-   
+    if (reservation.status === "cancelled") {
+      return new NextResponse(
+        JSON.stringify({ message: "Cannot update cancelled reservation" }),
+        { status: 400 }
+      );
+    }
+    if (reservation.status === "confirmed") {
+      return new NextResponse(
+        JSON.stringify({ message: "Cannot update confirmed reservation" }),
+        { status: 400 }
+      );
+   }
 
 
     reservation.status = status;
