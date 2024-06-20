@@ -67,7 +67,7 @@ const FeaturedVilla = () => {
                   <h1 className="font-bold text-xl">{info.name}</h1>
                 </div>
                 <div className="flex flex-col justify-start items-center">
-                  <h1 className="font-bold text-xl">Nrs. {info.pricePerNight}</h1>
+                  <h1 className="font-bold text-xl">USD {info.pricePerNight}</h1>
                   <h1 className="text-slate-700 text-lg">{info.location}</h1>
                 </div>
               </div>
