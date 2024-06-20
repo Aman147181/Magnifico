@@ -34,8 +34,8 @@ const Page = () => {
           Our Villas
         </h1>
         {console.log(villas)}
-        {villas.map((villa) => (
-          <div className="grid grid-cols-1  pb-16 lg:grid-cols-11 gap-8 gap-y-5  text-center w-full h-full justify-center items-center ">
+        {villas.map((villa, index) => (
+          <div key={index} className="grid grid-cols-1  pb-16 lg:grid-cols-11 gap-8 gap-y-5  text-center w-full h-full justify-center items-center ">
             <div className="col-span-1 relative  lg:col-span-4 ">
               <img
                 src={villa?.images[0]}
