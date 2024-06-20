@@ -11,7 +11,7 @@ export const mont = Montserrat({
   subsets: ["latin"],
   display: "swap",
 });
-const page = () => {
+const Page = () => {
   const [villas, setVillas] = useState([]);
   useEffect(() => {
     const fetchVillas = async () => {
@@ -92,4 +92,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default Page;
