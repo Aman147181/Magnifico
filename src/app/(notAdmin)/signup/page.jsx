@@ -158,7 +158,7 @@ const [sighningUp, setSighningUp] = useState(false);
               type="submit"
               color="primary"
               className="w-full"
-              isLoading={isSighningUp}
+              isLoading={sighningUp}
               
             >
               Sign up
