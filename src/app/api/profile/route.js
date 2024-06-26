@@ -47,6 +47,7 @@ export const POST = async (request) => {
     }
 
     const { username, password, phoneNumber, nationality, image } = body;
+    console.log(username);
     console.log(image);
 
     let hashedPassword = user.password;
@@ -65,7 +66,7 @@ export const POST = async (request) => {
     const updatedUser = await User.findByIdAndUpdate(
       decoded.payload.userId,
       {
-        username,
+        name:username,
         password: hashedPassword,
         phoneNumber,
         nationality,
@@ -73,7 +74,7 @@ export const POST = async (request) => {
       },
       { new: true }
     );
-
+console.log(updatedUser);
     return new NextResponse(JSON.stringify(updatedUser), { status: 200 });
   } catch (error) {
     return new NextResponse(JSON.stringify({ message: error.message }), {

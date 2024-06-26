@@ -5,6 +5,7 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { toast } from "react-toastify";
 import validator from 'validator';
 import { useRouter } from "next/navigation";
+import { Button } from "@nextui-org/react";
 const Page = () => {
   
 const router = useRouter()
@@ -14,7 +15,7 @@ const router = useRouter()
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-
+const [sighningUp, setSighningUp] = useState(false);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -24,10 +25,12 @@ const router = useRouter()
   };
 
   const handleSubmit = async (e) => {
+    setSighningUp(true);
     e.preventDefault();
 
     if (!validator.isEmail(formData.email)) {
       toast.error("Invalid email address");
+      setSighningUp(false);
       return;
     }
     const response = await fetch("/api/signup", {
@@ -45,10 +48,12 @@ const router = useRouter()
     if (response.ok) {
       // handle successful signup
       toast.success("Signup successful");
+      setSighningUp(false);
       router.push("/login");
     } else {
       const error = await response.json();
       toast.error(`${error.message}`);
+      setSighningUp(false);
     }
   };
 
@@ -149,12 +154,15 @@ const router = useRouter()
                 Forgot password?
               </a>
             </div>
-            <button
+            <Button
               type="submit"
-              className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              color="primary"
+              className="w-full"
+              isLoading={isSighningUp}
+              
             >
               Sign up
-            </button>
+            </Button>
             <p className="text-sm font-light text-gray-500">
               Already have an account?{" "}
               <Link

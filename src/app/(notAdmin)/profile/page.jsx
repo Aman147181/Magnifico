@@ -1,6 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Tabs, Tab, Spinner } from "@nextui-org/react";
+import {
+  Tabs,
+  Tab,
+  Spinner,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@nextui-org/react";
 import { toast } from "react-toastify";
 import {
   Modal,
@@ -15,6 +25,8 @@ import {
 const Profile = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [session, setSession] = useState(null);
+  const [reservations, setReservations] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     username: "",
@@ -23,6 +35,10 @@ const Profile = () => {
     phoneNumber: "",
     nationality: "",
   });
+  const date = (startDate) => {
+    let date = new Date(startDate.year, startDate.month - 1, startDate.day);
+    return date.toLocaleDateString();
+  };
   const fetchUserData = async () => {
     try {
       setLoading(true);
@@ -50,10 +66,36 @@ const Profile = () => {
     }
   };
   useEffect(() => {
-   
-
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    const fetchUserReservations = async (userId) => {
+      if (!userId) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/reservations/user/${userId}`);
+
+        if (res.status === 200) {
+          const data = await res.json();
+          console.log(data);
+          setReservations(data);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Fetch user properties when session is available
+    console.log(session);
+    if (session?._id) {
+      fetchUserReservations(session?._id);
+    }
+  }, [session]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -106,7 +148,6 @@ const Profile = () => {
           toast.success("Profile updated successfully");
           onOpenChange(false); // Close the modal
           fetchUserData();
-        
         };
       } else {
         const response = await fetch(`/api/profile`, {
@@ -127,7 +168,6 @@ const Profile = () => {
 
         toast.success("Profile updated successfully");
         onOpenChange(false); // Close the modal
-       
       }
     } catch (error) {
       console.log(error.message);
@@ -170,9 +210,9 @@ const Profile = () => {
                 <h1>
                   {" "}
                   <span className="text-black font-semibold  pr-[2px]">
-                    {0}
+                    {reservations?.length}
                   </span>{" "}
-                  Bookings
+                  Reservations
                 </h1>
               </div>
               <Button color="primary" onPress={onOpen}>
@@ -190,18 +230,55 @@ const Profile = () => {
             className="mt-10 "
             color="primary"
           >
-            <Tab key="Bookmarks" title="Bookmarks">
+            <Tab key="Reservation" title="Reservations">
+              <Table
+                isHeaderSticky
+                aria-label="Example table with client-side pagination"
+                classNames={{
+                  wrapper: "min-h-[272px] max-h-[560px] overflow-y-auto",
+                }}
+              >
+                <TableHeader>
+                  <TableColumn key="villa">Villa</TableColumn>
+                  <TableColumn key="number">No. of Guest</TableColumn>
+
+                  <TableColumn key="cost ">Cost</TableColumn>
+                  <TableColumn key="start">Check In</TableColumn>
+                  <TableColumn key="end">Check Out</TableColumn>
+
+                  <TableColumn key="status">Status</TableColumn>
+                </TableHeader>
+                <TableBody
+                  isLoading={loading}
+                  loadingContent="Loading..."
+                  emptyContent={"No reservations to display."}
+                >
+                  {reservations?.map((item) => (
+                    <TableRow key={item?._id}>
+                      <TableCell>{item?.villaname}</TableCell>
+                      <TableCell>{item?.numberOfGuests}</TableCell>
+
+                      <TableCell>{item?.cost}</TableCell>
+
+                      <TableCell>{date(item?.start)}</TableCell>
+                      <TableCell>{date(item?.end)}</TableCell>
+                      <TableCell>{item?.status}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Tab>
+            <Tab key="bookmark" title="Bookmarks">
               <div className="flex flex-col items-center justify-center w-full ">
                 <h1 className="font-mono text-lg pt-6 sm:text-2xl text-sky-900 font-bold">
-                  You have no bookmarks!
+                  Bookmarks tab is yet to be built
                 </h1>
               </div>
             </Tab>
-
-            <Tab key="Messages" title="Messages">
+            <Tab key="Notification" title="Notifications">
               <div className="flex flex-col items-center justify-center w-full ">
                 <h1 className="font-mono text-lg pt-6 sm:text-2xl text-sky-900 font-bold">
-                  You have no messages!
+                  Notifications tab is yet to be built
                 </h1>
               </div>
             </Tab>

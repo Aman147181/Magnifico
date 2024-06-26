@@ -5,10 +5,11 @@ import validator from "validator";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { Button } from "@nextui-org/react";
 
 const Page = () => {
   const router = useRouter();
-
+const [sighningin, setSighningin] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -24,9 +25,11 @@ const Page = () => {
   };
 
   const handleSubmit = async (e) => {
+    setSighningin(true);
     e.preventDefault();
     if (!validator.isEmail(formData.email)) {
       toast.error("Invalid email address");
+      setSighningin(false);
       return;
     }
     const response = await fetch("/api/login", {
@@ -39,11 +42,13 @@ const Page = () => {
 
     if (response.ok) {
       toast.success("Login successful");
+      setSighningin(false);
       router.push("/");
     } else {
       const error = await response.json();
       console.log(error);
       toast.error(`${error.message}`);
+      setSighningin(false);
     }
   };
 
@@ -125,12 +130,14 @@ const Page = () => {
                 Forgot password?
               </a>
             </div>
-            <button
+            <Button
               type="submit"
-              className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              color="primary"
+              className="w-full"
+              isLoading={sighningin}
             >
               Sign in
-            </button>
+            </Button>
             <p className="text-sm font-light text-gray-500">
               Don’t have an account yet?{" "}
               <Link
